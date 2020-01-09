@@ -208,11 +208,11 @@ public class MainActivity extends Activity implements UnifyPayListener {
         }
         // 被调用起来的，返回结果，并结束当前进程
         Log.d(TAG, "onActivityResult start close app");
-        //mStartIntent.putExtra("message", msg);
-        //mStartIntent.putExtra("resulturl", mResultUrl);
-        //setResult(result, mStartIntent);
+        mStartIntent.putExtra("message", msg);
+        mStartIntent.putExtra("result_url", mResultUrl);
+        setResult(result, mStartIntent);
         Log.d(TAG, "onActivityResult close app done");
-        //finish();
+        finish();
     }
 
     @Override
@@ -222,11 +222,11 @@ public class MainActivity extends Activity implements UnifyPayListener {
 
         Log.d(TAG, "onResult start close app");
         mStartIntent.putExtra("message", resultInfo);
-        mStartIntent.putExtra("resulturl", mResultUrl);
+        mStartIntent.putExtra("result_url", mResultUrl);
         Log.d(TAG, "onResult close app done");
 
-        //setResult(resultCode.equals("0000") || resultCode.equals("2001") ? RESULT_OK : RESULT_CANCELED, mStartIntent);
-        //finish();
+        setResult(resultCode.equals("0000") || resultCode.equals("2001") ? RESULT_OK : RESULT_CANCELED, mStartIntent);
+        finish();
     }
 
     private class GetPrepayIdTask extends AsyncTask<Void, Void, String> {
