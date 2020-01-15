@@ -69,16 +69,20 @@
       "sessionid":"1234xxxxx",                  // 支付订单号
       "sessionendtime":"2020-1-20 09:01:29",    // 支付时间
       "transaction_no":"1234xxx",               // 支付机构流水号
+      "billnumber":"2345xxx",                   // 客户购买订单号
       "receipt_amount":1000.00,                 // 商户实收金额
       "order_amount":1000.00,                   // 商户订单金额
       "settle_date":"2020-1-20"                 // 结算日期
     }
     
 # 查询结果
+    支付请求返回以下查询url，也可以自行拼装，提供sandbox/billnumber为参数
+    http://xxxx/webapi/asset/outertransfer/status?billnumber=202001070058150000006&sandbox=123456789
     正常返回
     {
       "sessionstatus":"成功|失败|关闭|等待|退款", // 交易状态
       "sessionid":"1234xxxxx",                  // 支付订单号
+      "billnumber":"2345xxx",                   // 客户购买订单号
       "sessionendtime":"2020-1-20 09:01:29",    // 支付时间
       "order_amount":1000.00                    // 商户订单金额
     }
