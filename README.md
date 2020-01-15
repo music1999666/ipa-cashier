@@ -84,7 +84,8 @@
       "sessionid":"1234xxxxx",                  // 支付订单号
       "billnumber":"2345xxx",                   // 客户购买订单号
       "sessionendtime":"2020-1-20 09:01:29",    // 支付时间
-      "order_amount":1000.00                    // 商户订单金额
+      "order_amount":1000.00,                   // 商户订单金额
+      "receipt_amount":1000.00                  // 商户实收金额
     }
     错误
     {
