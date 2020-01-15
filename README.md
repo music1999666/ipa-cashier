@@ -1,33 +1,27 @@
 # 提供收银台核心功能
 
 支付方式：APP/QR/H5/公众号支付
-
 支付渠道：微信/支付宝/云闪付
 
 # 使用环境
   
-  提供三个环境
-  
+  提供三个环境  
   dev/demo/product  分别对应开发，演示，生产环境
   
 # 调用参数
+
   pay_type: 微信/支付宝/云闪付
-
-  method:   h5pay/qrpay/apppay  
-
-  amount:   收款金额，以元为单位，两位小数
-  
-  sandbox:  子商户二级域名，一般为注册手机号
-  
-  billnumber: 订单号，要求在一个子商户中唯一
-  
-  notifyurl:  调用方提供的回调地址用于接收支付状态通知，POST方式，json参数 application/json; charset=utf-8
-  
+  method:   h5pay/qrpay/apppay
+  amount:   收款金额，以元为单位，两位小数  
+  sandbox:  子商户二级域名，一般为注册手机号  
+  billnumber: 订单号，要求在一个子商户中唯一  
+  notifyurl:  调用方提供的回调地址用于接收支付状态通知，POST方式，json参数 application/json; charset=utf-8  
   returnurl:  支付后跳转页面，支付方式为h5pay时使用
   
 # 返回结果
 
   公众号支付
+  
     {
       "url": "https://xxx?...",
       "method": "get",
@@ -36,6 +30,7 @@
     调用者在微信中跳转到url指定页面，可通过result_url自主查询支付结果，或者通过传递的notifyurl接收通知消息
 
   h5支付  
+  
     {
       "url": "https://xxx?...",
       "method": "get",
@@ -44,6 +39,7 @@
     调用者在浏览器中跳转到url指定页面，可通过result_url自主查询支付结果，或者通过传递的notifyurl接收通知消息
 
   扫码支付
+  
     {
       "qrcode": "https://xxx?id=31942001154593417000039638",
       "result_url": "http://xxx?..."
@@ -51,6 +47,7 @@
     调用者在将qrcode内容编码，并显示在界面中，可通过result_url自主查询支付结果，或者通过传递的notifyurl接收通知消息
 
   APP支付
+  
     {
     "app_pay_request": {"xxx":"xxxx"},
     "result_url": "http://xxx?..."
@@ -58,6 +55,7 @@
     调用者在将app_pay_reqeust内容作为参数，调用相应的APP支付sdk，可通过result_url自主查询支付结果，或者通过传递的notifyurl接收通知消息
     
   错误信息
+  
     如果调用发生错误，同样用json返回结果：
     {
       "error":"没有注册的用户"
