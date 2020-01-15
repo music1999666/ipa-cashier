@@ -1,22 +1,22 @@
 # 提供收银台核心功能
 
-支付方式：APP/QR/H5/公众号支付
-支付渠道：微信/支付宝/云闪付
+支付方式：APP/QR/H5/公众号支付 
+支付渠道：微信/支付宝/云闪付 
 
 # 使用环境
   
-  提供三个环境
-  dev/demo/product  分别对应开发，演示，生产环境
+  提供三个环境 
+  dev/demo/product  分别对应开发，演示，生产环境 
   
 # 调用参数
 
-  pay_type: 微信/支付宝/云闪付
-  method:   h5pay/qrpay/apppay
-  amount:   收款金额，以元为单位，两位小数
-  sandbox:  子商户二级域名，一般为注册手机号
-  billnumber: 订单号，要求在一个子商户中唯一
-  notifyurl:  调用方提供的回调地址用于接收支付状态通知，POST方式，json参数 application/json; charset=utf-8
-  returnurl:  支付后跳转页面，支付方式为h5pay时使用
+  pay_type: 微信/支付宝/云闪付 
+  method:   h5pay/qrpay/apppay 
+  amount:   收款金额，以元为单位，两位小数 
+  sandbox:  子商户二级域名，一般为注册手机号 
+  billnumber: 订单号，要求在一个子商户中唯一 
+  notifyurl:  调用方提供的回调地址用于接收支付状态通知，POST方式，json参数 application/json; charset=utf-8 
+  returnurl:  支付后跳转页面，支付方式为h5pay时使用 
   
 # 返回结果
 
