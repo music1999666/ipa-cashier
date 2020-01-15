@@ -2,61 +2,68 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ipaloma.jxbpay">
+
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <!-- 往SDCard写入数据权限 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- Optional for location -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- 往SDCard写入数据权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Optional for location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.NFC" />
-    <uses-feature android:name="android.hardware.nfc.hce"/>
+
+    <uses-feature android:name="android.hardware.nfc.hce" />
+
     <uses-permission android:name="org.simalliance.openmobileapi.SMARTCARD" />
 
     <application
-        tools:replace="android:name,android:allowBackup,android:theme"
+        android:name=".MyApplication"
         android:allowBackup="true"
-        android:name="MyApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:name,android:allowBackup,android:theme">
+        <activity
+            android:name=".QrActivity"
+            android:label="@string/title_activity_qr"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".H5Activity"
+            android:label="@string/title_activity_h5"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="CurrentEnvironment"
-            android:value="PROD" ><!--PROD or TEST-->
+            android:value="PROD"> <!-- PROD or TEST -->
         </meta-data>
-
         <meta-data
             android:name="PPPaySDK"
             android:value="true" />
 
         <uses-library
             android:name="org.simalliance.openmobileapi"
-            android:required="false"/>
+            android:required="false" />
+
         <activity
             android:name="com.unionpay.uppay.PayActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
             android:excludeFromRecents="true"
-            android:windowSoftInputMode="adjustResize"/>
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.unionpay.UPPayWapActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
-
-        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".MainActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,11 +71,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".wxapi.WXEntryActivity"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+        <activity
+            android:name=".wxapi.WXEntryActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:taskAffinity="com.ipaloma.jxbpay"></activity>
+            android:taskAffinity="com.ipaloma.jxbpay"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
     </application>
 
 </manifest>

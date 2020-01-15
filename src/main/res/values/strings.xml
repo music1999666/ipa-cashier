@@ -8,7 +8,9 @@
     <string name="getting_prepayid">正在获取支付订单...</string>
     <string name="get_prepayid_fail" formatted="false">获取支付订单失败，原因:%s</string>
     <string name="get_prepayid_succ">获取支付订单成功</string>
-    <string name="dev_env_url">http://dev1.ipaloma.com/webapi/asset/outertransfer/distributor/apppay</string>
-    <string name="demo_env_url">http://membership-demo.ipaloma.com/webapi/asset/outertransfer/distributor/apppay</string>
-    <string name="online_env_url">http://membership.ipaloma.com/webapi/asset/outertransfer/distributor/apppay</string>
+    <string name="dev_env_url">http://dev1.ipaloma.com/webapi/asset/outertransfer/distributor/</string>
+    <string name="demo_env_url">http://membership-demo.ipaloma.com/webapi/asset/outertransfer/distributor/</string>
+    <string name="online_env_url">http://membership.ipaloma.com/webapi/asset/outertransfer/distributor/</string>
+    <string name="title_activity_h5">H5Activity</string>
+    <string name="title_activity_qr">QrActivity</string>
 </resources>

@@ -42,7 +42,7 @@ android {
         versionCode 1
         versionName "1.0"
         signingConfig signingConfigs.config
-        ndk{
+        ndk {
             abiFilters "armeabi", "armeabi-v7a"
         }
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -67,7 +67,7 @@ android {
     }
 
     repositories {
-        flatDir{
+        flatDir {
             dirs 'libs'
         }
     }
@@ -81,6 +81,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:design:28.0.0'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -100,6 +101,6 @@ dependencies {
     implementation 'commons-codec:commons-codec:1.8'
     implementation(name: 'qmf-ppplugin-android-3.0.6', ext: 'aar')
     implementation 'org.jetbrains:annotations-java5:15.0'
-    implementation'androidx.annotation:annotation:+'
+    implementation 'androidx.annotation:annotation:+'
 
 }

@@ -76,8 +76,9 @@ public class MainActivity extends Activity implements UnifyPayListener {
             json.putOpt("title", mStartIntent.getStringExtra("title"));
             json.putOpt("billnumber", mStartIntent.getStringExtra("billnumber"));
             json.putOpt("notifyurl", mStartIntent.getStringExtra("notifyurl"));
+            json.putOpt("returnurl", mStartIntent.getStringExtra("returnurl"));
             json.putOpt("env", mStartIntent.getStringExtra("env"));
-
+            json.putOpt("method", mStartIntent.getStringExtra("method"));
         }catch (Exception e){
             Log.e(TAG, "error parameters", e);
             e.printStackTrace();
@@ -254,7 +255,7 @@ public class MainActivity extends Activity implements UnifyPayListener {
             int retCode = RESULT_CANCELED;
             String retMessage="";
             String payRequest = "";
-            JSONObject json;
+            JSONObject json=null;
 
             if (dialog != null) {
                 dialog.dismiss();
@@ -263,21 +264,24 @@ public class MainActivity extends Activity implements UnifyPayListener {
 
                 json = new JSONObject(result == null ? "{\"error\":\"连接服务器失败\"}" : result);
                 String error = json.optString("error", "").trim();
-                payRequest = json.optString("app_pay_request", "").trim();
                 mResultUrl = json.optString("result_url", "");  // 从服务器返回的状态查询 url
                 if (json.has("result_url"))
                     json.remove("result_url");
 
-                retCode = error.equals("") && !payRequest.equals("") && !mResultUrl.equals("") ? RESULT_OK : RESULT_CANCELED;
+                retCode = error.equals("") && !mResultUrl.equals("") ? RESULT_OK : RESULT_CANCELED;
                 retMessage = !error.equals("") ? String.format(getString(R.string.get_prepayid_fail), error)
-                                        : payRequest.equals("") ? "服务器返回数据格式有问题，缺少“appPayRequest”字段"
                                         : getString(R.string.get_prepayid_succ);
+
+                mStartIntent.putExtra("result_url", mResultUrl);
+
             }catch (JSONException e){
                 Log.e(TAG, "exception:", e);
+                retCode = RESULT_CANCELED;
                 retMessage = "返回结果处理异常";
             }
 
-            if(retCode == RESULT_OK){
+            if(retCode == RESULT_OK && parameter.optString("method", "").equals("apppay")){
+                payRequest = json.optString("app_pay_request", "").trim();
                 if (typetag == 0) {
                     payUMSPay(payRequest);
                 } else if (typetag == 1) {
@@ -287,8 +291,22 @@ public class MainActivity extends Activity implements UnifyPayListener {
                 } else if (typetag == 3) {
                     payCloudQuickPay(payRequest);
                 }
-                mStartIntent.putExtra("result_url", mResultUrl);
             }
+
+            if(retCode == RESULT_OK && parameter.optString("method", "").equals("h5pay")){
+                Intent intent = new Intent();
+                intent.setClass(mActivity.getApplicationContext(), H5Activity.class);
+                intent.putExtra("url", json.optString("url", ""));
+                startActivity(intent);
+            }
+
+            if(retCode == RESULT_OK && parameter.optString("method", "").equals("qrpay")){
+                Intent intent = new Intent();
+                intent.setClass(mActivity.getApplicationContext(), QrActivity.class);
+                intent.putExtra("url", json.optString("qrcode", ""));
+                startActivity(intent);
+            }
+
 
             Log.d(TAG, retMessage);
             if(BuildConfig.DEBUG)
@@ -307,9 +325,10 @@ public class MainActivity extends Activity implements UnifyPayListener {
         protected String doInBackground(Void... params) {
             String env = parameter.optString("env", "");
             env = env == null ? "" : env;
-            String url = env.equalsIgnoreCase("dev") ? getString(R.string.dev_env_url)
+            String url = (env.equalsIgnoreCase("dev") ? getString(R.string.dev_env_url)
                                 : env.equalsIgnoreCase("demo") ? getString(R.string.demo_env_url)
-                                : getString(R.string.online_env_url);
+                                : getString(R.string.online_env_url))
+                                + parameter.optString("method");
 
             String entity = "";
 
@@ -442,3 +461,4 @@ public class MainActivity extends Activity implements UnifyPayListener {
         }
     }
 }
+
