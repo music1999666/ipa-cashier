@@ -4,31 +4,43 @@
 
 支付渠道：微信/支付宝/云闪付
 
-#使用环境
+# 使用环境
   
   提供三个环境
   
   dev/demo/product  分别对应开发，演示，生产环境
   
-#调用参数
+# 调用参数
+
   pay_type: 微信/支付宝/云闪付
+
   method:   h5pay/qrpay/apppay  
+
   amount:   收款金额，以元为单位，两位小数
+  
   sandbox:  子商户二级域名，一般为注册手机号
+  
   billnumber: 订单号，要求在一个子商户中唯一
+  
   notifyurl:  调用方提供的回调地址用于接收支付状态通知，POST方式，json参数 application/json; charset=utf-8
+  
   returnurl:  支付后跳转页面，支付方式为h5pay时使用
-返回结果
+  
+# 返回结果
   公众号支付
+  
     {
-      "url": "https://xxx?msgId=62b2d91937b047eab217ad5f21272a13&requestTimestamp=2020-01-15+10%3a58%3a22&merOrderId=3194202001151058215850000001&mid=898340149000005&tid=001&attachedData=%7b%22flowrootid%22%3anull%2c%22sandbox%22%3a%2218531828656%22%2c%22guid%22%3a%2226da6c892df548dba1ecc40207267d8a%22%2c%22notify_url%22%3anull%7d&notifyUrl=http%3a%2f%2fliubin-2018.imdo.co%2fwebapi%2fasset%2foutertransfer%2fpay%2fnotify%2fchinaums%2f3194202001151058215850000001&instMid=YUEDANDEFAULT&originalAmount=1&totalAmount=1&subAppId=12345&msgType=WXPay.jsPay&msgSrc=WWW.TEST.COM&sign=CCDE393612DCBCE358849C26CB1A648C",
+      "url": "https://xxx?...",
       "method": "get",
-      "result_url": "http://xxx/webapi/asset/outertransfer/status?billnumber=202001070058150000006"
+      "result_url": "http://xxx?..."
     }
+    
     调用者在微信中跳转到url指定页面，可通过result_url自主查询支付结果，或者通过传递的notifyurl接收通知消息
+    
   h5支付  
+  
     {
-      "url": "https://xxx?msgId=62b2d91937b047eab217ad5f21272a13&requestTimestamp=2020-01-15+10%3a58%3a22&merOrderId=3194202001151058215850000001&mid=898340149000005&tid=001&attachedData=%7b%22flowrootid%22%3anull%2c%22sandbox%22%3a%2218531828656%22%2c%22guid%22%3a%2226da6c892df548dba1ecc40207267d8a%22%2c%22notify_url%22%3anull%7d&notifyUrl=http%3a%2f%2fliubin-2018.imdo.co%2fwebapi%2fasset%2foutertransfer%2fpay%2fnotify%2fchinaums%2f3194202001151058215850000001&instMid=YUEDANDEFAULT&originalAmount=1&totalAmount=1&subAppId=12345&msgType=WXPay.jsPay&msgSrc=WWW.TEST.COM&sign=CCDE393612DCBCE358849C26CB1A648C",
+      "url": "https://xxx?...",
       "method": "get",
       "result_url": "http://xxx/webapi/asset/outertransfer/status?billnumber=202001070058150000006"
     }
