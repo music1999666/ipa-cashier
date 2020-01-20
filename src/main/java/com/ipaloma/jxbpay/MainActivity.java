@@ -303,7 +303,7 @@ public class MainActivity extends Activity implements UnifyPayListener {
             if(retCode == RESULT_OK && parameter.optString("method", "").equals("qrpay")){
                 Intent intent = new Intent();
                 intent.setClass(mActivity.getApplicationContext(), QrActivity.class);
-                intent.putExtra("url", json.optString("qrcode", ""));
+                intent.putExtra("qrcode", json.optString("qrcode", ""));
                 startActivity(intent);
             }
 
@@ -339,6 +339,7 @@ public class MainActivity extends Activity implements UnifyPayListener {
                                 : typetag == 3 ? "云闪付"
                                 : "微信"); // getCloudQuickPayParm
 
+                parameter.putOpt("no_redirect", true);
                 entity = parameter.toString();
             } catch (JSONException e) {
                 Log.e(TAG, "exception in prepare parameter", e);

@@ -19,6 +19,7 @@ public class QrActivity extends AppCompatActivity {
 
     private static final String TAG = "QrActivity";
     private Context mActivity;
+    private Intent mStartIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +37,11 @@ public class QrActivity extends AppCompatActivity {
             }
         });
 
+        mStartIntent = getIntent();
         new Runnable(){
             @Override
             public void run() {
-                Intent startIntent = getIntent();
-                String qrCode = startIntent.getStringExtra("qrcode");
+                String qrCode = mStartIntent.getStringExtra("qrcode");
                 Log.d(TAG, "get qrcode : " + qrCode);
 
                 ImageView web = findViewById(R.id.qrCodeImageView);
