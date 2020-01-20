@@ -25,6 +25,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.unionpay.UPPayAssistEx;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
@@ -49,6 +50,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import static android.view.View.INVISIBLE;
 
 public class MainActivity extends Activity implements UnifyPayListener {
     private final static String TAG = "MainActivity";
@@ -116,6 +119,11 @@ public class MainActivity extends Activity implements UnifyPayListener {
                 new GetPrepayIdTask(3, json).execute();
             }
         });
+
+        if(json.optString("method", "").equals("h5pay")) {
+            wxtype.setVisibility(INVISIBLE);
+            cloudpay.setVisibility(INVISIBLE);
+        }
 
         mUnifyPlugin = UnifyPayPlugin.getInstance(this);
         mUnifyPlugin.setListener(this);
@@ -428,10 +436,11 @@ public class MainActivity extends Activity implements UnifyPayListener {
                 HttpResponse response;
                 if ((response = httpClient.execute(httpPost)).getStatusLine().getStatusCode() != 200) {
                     Log.e("SDK_Sample.Util", "httpGet fail, status code = " + response.getStatusLine().getStatusCode());
-                    return null;
-                } else {
-                    return EntityUtils.toByteArray(response.getEntity());
                 }
+                HttpEntity result = response.getEntity();
+                if(result == null)
+                    return null;
+                return EntityUtils.toByteArray(result);
             } catch (Exception var3) {
                 Log.e("SDK_Sample.Util", "httpPost exception, e = " + var3.getMessage());
                 var3.printStackTrace();
