@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -99,12 +100,20 @@ public class MainActivity extends Activity implements UnifyPayListener {
         alipay = (TextView) findViewById(R.id.ali_pay); // 2
         cloudpay = (TextView) findViewById(R.id.cloud_quicki_pay); // 3
 
-        wxtype.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new GetPrepayIdTask(1, json).execute();
-            }
-        });
+        if(!json.optString("method", "").equals("h5pay")) {
+            wxtype.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new GetPrepayIdTask(1, json).execute();
+                }
+            });
+            cloudpay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new GetPrepayIdTask(3, json).execute();
+                }
+            });
+        }
 
         alipay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,16 +122,10 @@ public class MainActivity extends Activity implements UnifyPayListener {
             }
         });
 
-        cloudpay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new GetPrepayIdTask(3, json).execute();
-            }
-        });
 
         if(json.optString("method", "").equals("h5pay")) {
-            wxtype.setVisibility(INVISIBLE);
-            cloudpay.setVisibility(INVISIBLE);
+            wxtype.setTextColor(Color.GRAY);
+            cloudpay.setTextColor(Color.GRAY);
         }
 
         mUnifyPlugin = UnifyPayPlugin.getInstance(this);
