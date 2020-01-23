@@ -65,8 +65,10 @@ public class MainActivity extends Activity implements UnifyPayListener, GetPayRe
         super.onCreate(savedInstanceState);
 
         mStartIntent = getIntent();
-        parameter = new JSONObject();
+        // get json string from parameter
+
         try {
+            parameter = new JSONObject();
             parameter.putOpt("amount", mStartIntent.getDoubleExtra("amount", 0));
             parameter.putOpt("sandbox", mStartIntent.getStringExtra("sandbox"));
             parameter.putOpt("title", mStartIntent.getStringExtra("title"));

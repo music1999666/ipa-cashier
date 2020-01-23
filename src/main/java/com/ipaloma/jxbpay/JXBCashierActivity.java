@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Debug;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,27 +43,36 @@ public class JXBCashierActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         mActivity = this;
         mStartIntent = getIntent();
-        parameter = new JSONObject();
-        try {
-            parameter.putOpt("amount", mStartIntent.getDoubleExtra("amount", 0));
-            parameter.putOpt("sandbox", mStartIntent.getStringExtra("sandbox"));
-            parameter.putOpt("title", mStartIntent.getStringExtra("title"));
-            parameter.putOpt("billnumber", mStartIntent.getStringExtra("billnumber"));
-            //parameter.putOpt("notifyurl", mStartIntent.getStringExtra("notifyurl"));
-            //parameter.putOpt("returnurl", mStartIntent.getStringExtra("returnurl"));
-            parameter.putOpt("env", mStartIntent.getStringExtra("env"));
-            parameter.putOpt("method", "qrpay");
-            parameter.putOpt("pay_type", "c2b聚合支付");    // Dummy
-            parameter.putOpt("no_redirect", true);
-        }catch (Exception e){
-            Log.e(TAG, "error parameters", e);
-            e.printStackTrace();
-        }
-
         if(mStartIntent.getExtras() != null)
             Log.d(TAG, "start parameter" + mStartIntent.getExtras().toString());
 
+        try {
+            String para_str = mStartIntent.getStringExtra("parameter");
+
+            parameter = new JSONObject(para_str);
+            parameter.putOpt("amount", parameter.optDouble("count"));
+            parameter.remove("count");
+            parameter.putOpt("billnumber", parameter.optString("billid", ""));
+            parameter.putOpt("method", "qrpay");
+            parameter.putOpt("pay_type", "c2b聚合支付");
+            parameter.putOpt("no_redirect", true);
+        } catch (JSONException e) {
+            Log.e(TAG, "error parameters", e);
+            e.printStackTrace();
+            parameter = new JSONObject();
+        }
+
         setContentView(R.layout.activity_jxbcashier);
+
+        //显示收款场景
+        String category = parameter.optString("scene", "");
+        TextView title = (TextView)findViewById(R.id.toolbar_title);
+        title.setText("经销宝收银台" + (category.equals("") ? "" : "-") + category);
+
+        customer = (TextView)findViewById(R.id.customer_name);
+        if(!parameter.optString("customer_name", "").equals(""))
+            customer.setText(parameter.optString("customer_name"));
+
         cashTotal = (TextView)findViewById(R.id.cash_total);
         double amount = parameter.optDouble("amount", 0);
         String amount_text = parameter.optString("amount", "");
@@ -72,9 +82,6 @@ public class JXBCashierActivity extends AppCompatActivity
         else if (!amount_text.equals(""))
             cashTotal.setText(String.format("￥%s元", amount_text));
 
-        customer = (TextView)findViewById(R.id.customer_name);
-        if(!parameter.optString("customer_name", "").equals(""))
-            customer.setText(parameter.optString("customer_name"));
         loadQr = (TextView)findViewById(R.id.load_qr_hint);
         qrPay = (ImageView)findViewById(R.id.qr);
 
@@ -85,7 +92,6 @@ public class JXBCashierActivity extends AppCompatActivity
 
         tickText = (TextView)findViewById(R.id.tick_text);
 
-        //mPayRequestTask = new GetPayRequestTask(parameter, this, this).execute();
     }
 
     @Override

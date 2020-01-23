@@ -21,7 +21,7 @@
     <string name="title_activity_jxbcashier">经销宝收银台</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="payment_status_network_error">网络开小差了\n\n点击继续扫码\n\n如果门店确已支付\n可按照欠款结算\n回公司后对账处理</string>
-    <string name="payment_status_error">查询支付状态出错了\n\n%s\n\n点击继续扫码\n\n如果门店确已支付\n可按照欠款结算\n回公司后对账处理"</string>
-    <string name="payment_status_pending">客户没有完成支付\n\n点击继续扫码\n\n如果门店确已支付\n可按照欠款提交\n回公司后对账处理</string>
+    <string name="payment_status_network_error">网络开小差了\n\n点击继续扫码\n\n如果门店确已支付\n可先按照实收为 0 结算\n回公司后对账处理</string>
+    <string name="payment_status_error">查询支付状态出错了\n\n%s\n\n点击继续扫码\n\n如果门店确已支付\n可先按照实收为 0 结算\n回公司后对账处理"</string>
+    <string name="payment_status_pending">客户没有完成支付\n\n点击继续扫码\n\n如果门店确已支付\n可先按照实收为 0 结算\n回公司后对账处理</string>
 </resources>

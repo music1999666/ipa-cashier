@@ -98,6 +98,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/confirm_method" />
 
+
     <TextView
         android:id="@+id/aggregate"
         android:layout_width="0sp"
@@ -114,6 +115,16 @@
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/line2" />
+
+    <ImageView
+        android:id="@+id/recommend"
+
+        android:layout_width="30sp"
+
+        android:layout_height="15sp"
+        android:background="@drawable/recommend"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/line2" />
 
     <TextView
         android:id="@+id/pay_cash"
