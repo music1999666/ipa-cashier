@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:visibility="visible"
+    android:id="@+id/qr_layout"
+    android:layout_width="0sp"
+    android:layout_height="0sp"
+    android:background="@color/white"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/line3">
+
+
+    <ImageView
+        android:id="@+id/qr"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        android:layout_marginBottom="10sp"
+        app:layout_constraintBottom_toTopOf="@id/qr_ali"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bg_shape_display_view_top" />
+
+    <TextView
+        android:id="@+id/load_qr_hint"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        android:layout_marginBottom="10sp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:gravity="center"
+        android:paddingTop="@dimen/public_space_value_10"
+        android:text="正在加载收款码......"
+        android:textColor="#FF6600"
+        android:textSize="18sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/qr_ali"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tick_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="2sp"
+        android:paddingBottom="2sp"
+        android:textColor="@color/gray"
+        android:background="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/qr_wx" />
+
+    <ImageView
+        android:id="@+id/qr_ali"
+        android:layout_width="32sp"
+        android:layout_height="32sp"
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/qr_wx"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ali_pay" />
+
+    <ImageView
+        android:id="@+id/qr_wx"
+        android:layout_width="32sp"
+        android:layout_height="32sp"
+        android:layout_marginLeft="16sp"
+        android:layout_marginRight="16sp"
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/qr_cloud"
+        app:layout_constraintStart_toEndOf="@id/qr_ali"
+        app:srcCompat="@drawable/wx_pay" />
+
+    <ImageView
+        android:id="@+id/qr_cloud"
+        android:layout_width="32sp"
+        android:layout_height="32sp"
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/qr_wx"
+        app:srcCompat="@drawable/quick_pay" />
+
+</android.support.constraint.ConstraintLayout>
+

@@ -28,18 +28,22 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:screenOrientation="portrait"
         tools:replace="android:name,android:allowBackup,android:theme">
         <activity
             android:name=".JXBCashierActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:exported="true"/>
         <activity
             android:name=".QrActivity"
             android:label="@string/title_activity_qr"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".H5Activity"
             android:label="@string/title_activity_h5"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cash_layout"
+    android:layout_width="0sp"
+    android:layout_height="0sp"
+    android:background="@color/white"
+    android:visibility="invisible"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/line3">
+
+    <android.support.constraint.Guideline android:id="@+id/guideline_cash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8016416" />
+
+    <TextView
+        android:id="@+id/cash_hint"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:gravity="center"
+        android:paddingTop="@dimen/public_space_value_10"
+        android:paddingBottom="@dimen/public_space_value_10"
+        android:text="@string/cash_confirm_hint"
+        android:maxLines="2"
+        app:autoSizeTextType="uniform"
+
+        android:textColor="#FF6600"
+        android:textSize="24sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/guideline_cash"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/cash_cancel"
+        android:text="取消"
+
+        android:textColor="@color/white"
+        android:background="#FF6600"
+        android:textSize="16sp"
+
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginRight="16sp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/cash_confirm"
+        app:layout_constraintTop_toBottomOf="@id/guideline_cash"
+
+        app:layout_constraintHorizontal_chainStyle="spread" />
+
+    <Button
+        android:id="@+id/cash_confirm"
+        android:text="确认并提交"
+        android:textColor="@color/white"
+        android:background="#FF6600"
+        android:textSize="16sp"
+
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="16sp"
+
+        app:layout_constraintTop_toBottomOf="@id/guideline_cash"
+        app:layout_constraintStart_toEndOf="@id/cash_cancel"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+</android.support.constraint.ConstraintLayout>
+

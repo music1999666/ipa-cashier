@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/pay_desc_layout"
+    android:layout_width="0sp"
+    android:layout_height="0sp"
+    android:background="@color/white"
+    android:visibility="visible"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/line3">
+
+    <android.support.constraint.Guideline android:id="@+id/guideline_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8016416" />
+
+    <TextView
+        android:id="@+id/pay_description"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:gravity="left|center_vertical"
+        android:textAlignment="gravity"
+        android:lineSpacingExtra="16sp"
+
+        android:paddingTop="@dimen/public_space_value_10"
+        android:paddingBottom="@dimen/public_space_value_10"
+
+        android:text="@string/qr_pay_description"
+
+        android:maxLines="3"
+        app:autoSizeTextType="uniform"
+
+        android:textColor="#FF6600"
+        android:textSize="24sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/guideline_desc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/no_more"
+        android:text="不用再提醒"
+
+        android:textColor="@color/white"
+        android:background="#FF6600"
+        android:textSize="16sp"
+
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginRight="16sp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/confirm_acknowledge"
+        app:layout_constraintTop_toBottomOf="@id/guideline_desc"
+
+        app:layout_constraintHorizontal_chainStyle="spread" />
+
+    <Button
+        android:id="@+id/confirm_acknowledge"
+        android:text="知道了"
+        android:textColor="@color/white"
+        android:background="#FF6600"
+        android:textSize="16sp"
+
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="16sp"
+
+        app:layout_constraintTop_toBottomOf="@id/guideline_desc"
+        app:layout_constraintStart_toEndOf="@id/no_more"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+</android.support.constraint.ConstraintLayout>
+

@@ -21,7 +21,21 @@
     <string name="title_activity_jxbcashier">经销宝收银台</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="payment_status_network_error">网络开小差了\n\n点击继续扫码\n\n如果门店确已支付\n可先按照实收为 0 结算\n回公司后对账处理</string>
-    <string name="payment_status_error">查询支付状态出错了\n\n%s\n\n点击继续扫码\n\n如果门店确已支付\n可先按照实收为 0 结算\n回公司后对账处理"</string>
-    <string name="payment_status_pending">客户没有完成支付\n\n点击继续扫码\n\n如果门店确已支付\n可先按照实收为 0 结算\n回公司后对账处理</string>
+    <string name="payment_status_network_error">网络开小差了\n\n点击继续扫码%s</string>
+    <string name="payment_status_error">查询支付状态出错了\n\n%s\n\n点击继续扫码%s"</string>
+    <string name="payment_status_pending">客户没有完成支付\n\n点击继续扫码%s</string>
+    <string name="settle_payment_status_unknown">\n\n如果门店确已支付\n返回并按照实收 ￥0元 结算\n回公司后对账处理</string>
+    <string name="cash_in_payment_status_unknown">\n\n如果门店确已支付\n建议拍照保留用户支付记录\n回公司后对账处理</string>
+    <string name="back_button_string"><![CDATA[<]]></string>
+    <string name="cash_confirm_result">{\"status\":\"成功\",\"method\":\"现金\"}</string>
+    <string name="cancel_result">{\"status\":\"取消\"}</string>
+    <string name="qr_confirm_result">{\"status\":\"成功\",\"method\":\"c2b聚合支付扫码\"}</string>
+
+    <string name="qr_pay_description">用公司聚合收款码\n直接进入公司账户\n无需另行向公司缴款</string>
+
+    <string name="cash_pay_description">用以下方式收款:\n现金/个人微信/个人支付宝\n需要另行向公司缴款</string>
+
+    <string name="cash_confirm_hint">请确认\n已经完成收款</string>
+    <string name="pay_to_compay">扫公司码</string>
+    <string name="pay_to_sales">个人代收</string>
 </resources>
