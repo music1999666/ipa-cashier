@@ -7,10 +7,21 @@
     <string name="app_tip">提示</string>
     <string name="getting_prepayid">正在获取支付订单...</string>
     <string name="get_prepayid_fail" formatted="false">获取支付订单失败，原因:%s</string>
+    <string name="get_qr_fail" formatted="false">%s\n\n加载二维码失败\n\n点击重新加载</string>
+    <string name="pay_done" formatted="false">已收到\n\n￥%,.2f元\n\n点击返回</string>
     <string name="get_prepayid_succ">获取支付订单成功</string>
     <string name="dev_env_url">http://dev1.ipaloma.com/webapi/asset/outertransfer/distributor/</string>
     <string name="demo_env_url">http://membership-demo.ipaloma.com/webapi/asset/outertransfer/distributor/</string>
     <string name="online_env_url">http://membership.ipaloma.com/webapi/asset/outertransfer/distributor/</string>
     <string name="title_activity_h5">H5Activity</string>
     <string name="title_activity_qr">QrActivity</string>
+    <string name="title_method_list">methods</string>
+    <string name="title_method_detail">method Detail</string>
+
+    <string name="title_activity_jxbcashier">经销宝收银台</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="payment_status_network_error">网络开小差了\n\n点击继续扫码\n\n如果门店确已支付\n可按照欠款结算\n回公司后对账处理</string>
+    <string name="payment_status_error">查询支付状态出错了\n\n%s\n\n点击继续扫码\n\n如果门店确已支付\n可按照欠款结算\n回公司后对账处理"</string>
+    <string name="payment_status_pending">客户没有完成支付\n\n点击继续扫码\n\n如果门店确已支付\n可按照欠款提交\n回公司后对账处理</string>
 </resources>

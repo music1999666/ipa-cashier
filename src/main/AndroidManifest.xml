@@ -30,9 +30,13 @@
         android:theme="@style/AppTheme"
         tools:replace="android:name,android:allowBackup,android:theme">
         <activity
+            android:name=".JXBCashierActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true"/>
+        <activity
             android:name=".QrActivity"
             android:label="@string/title_activity_qr"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".H5Activity"
             android:label="@string/title_activity_h5"

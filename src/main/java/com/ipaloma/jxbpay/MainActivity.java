@@ -2,13 +2,10 @@ package com.ipaloma.jxbpay;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -22,8 +19,6 @@ import com.chinaums.pppay.unify.SocketFactory;
 import com.chinaums.pppay.unify.UnifyPayListener;
 import com.chinaums.pppay.unify.UnifyPayPlugin;
 import com.chinaums.pppay.unify.UnifyPayRequest;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
 import com.unionpay.UPPayAssistEx;
 
 import org.apache.http.HttpEntity;
@@ -47,14 +42,9 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import static android.view.View.INVISIBLE;
-
-public class MainActivity extends Activity implements UnifyPayListener {
+public class MainActivity extends Activity implements UnifyPayListener, GetPayRequestTask.GetPayRequestResponse {
     private final static String TAG = "MainActivity";
     private TextView wxtype, alipay, cloudpay;
 
@@ -67,22 +57,25 @@ public class MainActivity extends Activity implements UnifyPayListener {
     private Intent mStartIntent;
     private String mResultUrl;
     private UnifyPayPlugin mUnifyPlugin;
+    private JSONObject parameter;
+    private TextView c2bpay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mStartIntent = getIntent();
-        final JSONObject json = new JSONObject();
+        parameter = new JSONObject();
         try {
-            json.putOpt("amount", mStartIntent.getDoubleExtra("amount", 0));
-            json.putOpt("sandbox", mStartIntent.getStringExtra("sandbox"));
-            json.putOpt("title", mStartIntent.getStringExtra("title"));
-            json.putOpt("billnumber", mStartIntent.getStringExtra("billnumber"));
-            json.putOpt("notifyurl", mStartIntent.getStringExtra("notifyurl"));
-            json.putOpt("returnurl", mStartIntent.getStringExtra("returnurl"));
-            json.putOpt("env", mStartIntent.getStringExtra("env"));
-            json.putOpt("method", mStartIntent.getStringExtra("method"));
+            parameter.putOpt("amount", mStartIntent.getDoubleExtra("amount", 0));
+            parameter.putOpt("sandbox", mStartIntent.getStringExtra("sandbox"));
+            parameter.putOpt("title", mStartIntent.getStringExtra("title"));
+            parameter.putOpt("billnumber", mStartIntent.getStringExtra("billnumber"));
+            parameter.putOpt("notifyurl", mStartIntent.getStringExtra("notifyurl"));
+            parameter.putOpt("returnurl", mStartIntent.getStringExtra("returnurl"));
+            parameter.putOpt("env", mStartIntent.getStringExtra("env"));
+            parameter.putOpt("method", mStartIntent.getStringExtra("method"));
+            parameter.putOpt("no_redirect", true);
         }catch (Exception e){
             Log.e(TAG, "error parameters", e);
             e.printStackTrace();
@@ -93,24 +86,47 @@ public class MainActivity extends Activity implements UnifyPayListener {
         setContentView(R.layout.activity_main);
 
         // title
-        ((TextView) findViewById(R.id.head_title)).setText(json.optString("title", "") == "" ? "收银台" : json.optString("title"));
+        ((TextView) findViewById(R.id.head_title)).setText(parameter.optString("title", "") == "" ? "收银台" : parameter.optString("title"));
 
-        //支付环境选择
+        //支付选择
         wxtype = (TextView) findViewById(R.id.weixin_pay);   // 1
         alipay = (TextView) findViewById(R.id.ali_pay); // 2
         cloudpay = (TextView) findViewById(R.id.cloud_quicki_pay); // 3
+        c2bpay = (TextView) findViewById(R.id.c2b_qr_pay);
 
-        if(!json.optString("method", "").equals("h5pay")) {
+        if(!parameter.optString("method", "").equals("h5pay")) {
             wxtype.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new GetPrepayIdTask(1, json).execute();
+                    try {
+                        parameter.putOpt("pay_type", "微信");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    new GetPayRequestTask(parameter, mActivity, MainActivity.this).execute();
                 }
             });
             cloudpay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new GetPrepayIdTask(3, json).execute();
+                    try {
+                        parameter.putOpt("pay_type", "云闪付");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    new GetPayRequestTask(parameter, mActivity, MainActivity.this).execute();
+                }
+            });
+            cloudpay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        parameter.putOpt("pay_type", "c2b聚合支付");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    new GetPayRequestTask(parameter, mActivity, MainActivity.this).execute();
                 }
             });
         }
@@ -118,14 +134,20 @@ public class MainActivity extends Activity implements UnifyPayListener {
         alipay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new GetPrepayIdTask(2, json).execute();
+                try {
+                    parameter.putOpt("pay_type", "支付宝");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                new GetPayRequestTask(parameter, mActivity, MainActivity.this).execute();
             }
         });
 
 
-        if(json.optString("method", "").equals("h5pay")) {
+        if(parameter.optString("method", "").equals("h5pay")) {
             wxtype.setTextColor(Color.GRAY);
             cloudpay.setTextColor(Color.GRAY);
+            c2bpay.setTextColor(Color.GRAY);
         }
 
         mUnifyPlugin = UnifyPayPlugin.getInstance(this);
@@ -241,138 +263,76 @@ public class MainActivity extends Activity implements UnifyPayListener {
         finish();
     }
 
-    private class GetPrepayIdTask extends AsyncTask<Void, Void, String> {
+    @Override
+    public void onPayRequest(String result) {
+        Log.i(TAG, "onPostExecute-->" + result);
+        int retCode = RESULT_CANCELED;
+        String retMessage="";
+        String payRequest = "";
+        JSONObject json=null;
 
-        private final JSONObject parameter;
-        private ProgressDialog dialog;
-        private int typetag = 1;
+        try {
 
-        public GetPrepayIdTask(int type, JSONObject param) {
-            typetag = type;parameter = param;
+            json = new JSONObject(result == null ? "{\"error\":\"连接服务器失败\"}" : result);
+            String error = json.optString("error", "").trim();
+            mResultUrl = json.optString("result_url", "");  // 从服务器返回的状态查询 url
+            if (json.has("result_url"))
+                json.remove("result_url");
+
+            retCode = error.equals("") && !mResultUrl.equals("") ? RESULT_OK : RESULT_CANCELED;
+            retMessage = !error.equals("") ? String.format(getString(R.string.get_prepayid_fail), error)
+                    : getString(R.string.get_prepayid_succ);
+
+            mStartIntent.putExtra("result_url", mResultUrl);
+
+        }catch (JSONException e){
+            Log.e(TAG, "exception:", e);
+            retCode = RESULT_CANCELED;
+            retMessage = "返回结果处理异常";
         }
 
-        @Override
-        protected void onPreExecute() {
-            dialog =
-                    ProgressDialog.show(MainActivity.this,
-                            getString(R.string.app_tip),
-                            getString(R.string.getting_prepayid));
+        if(retCode == RESULT_OK && parameter.optString("method", "").equals("apppay")){
+            payRequest = json.optString("app_pay_request", "").trim();
+            if (parameter.optString("pay_type", "").equals("微信")) {
+                payWX(payRequest);
+            } else if (parameter.optString("pay_type", "").equals("支付宝")) {
+                payAliPay(payRequest);
+            } else if (parameter.optString("pay_type", "").equals("云闪付")) {
+                payCloudQuickPay(payRequest);
+            }
         }
 
-        @Override
-        protected void onPostExecute(String result) {
-
-            Log.i(TAG, "onPostExecute-->" + result);
-            int retCode = RESULT_CANCELED;
-            String retMessage="";
-            String payRequest = "";
-            JSONObject json=null;
-
-            if (dialog != null) {
-                dialog.dismiss();
-            }
-            try {
-
-                json = new JSONObject(result == null ? "{\"error\":\"连接服务器失败\"}" : result);
-                String error = json.optString("error", "").trim();
-                mResultUrl = json.optString("result_url", "");  // 从服务器返回的状态查询 url
-                if (json.has("result_url"))
-                    json.remove("result_url");
-
-                retCode = error.equals("") && !mResultUrl.equals("") ? RESULT_OK : RESULT_CANCELED;
-                retMessage = !error.equals("") ? String.format(getString(R.string.get_prepayid_fail), error)
-                                        : getString(R.string.get_prepayid_succ);
-
-                mStartIntent.putExtra("result_url", mResultUrl);
-
-            }catch (JSONException e){
-                Log.e(TAG, "exception:", e);
-                retCode = RESULT_CANCELED;
-                retMessage = "返回结果处理异常";
-            }
-
-            if(retCode == RESULT_OK && parameter.optString("method", "").equals("apppay")){
-                payRequest = json.optString("app_pay_request", "").trim();
-                if (typetag == 0) {
-                    payUMSPay(payRequest);
-                } else if (typetag == 1) {
-                    payWX(payRequest);
-                } else if (typetag == 2) {
-                    payAliPay(payRequest);
-                } else if (typetag == 3) {
-                    payCloudQuickPay(payRequest);
-                }
-            }
-
-            if(retCode == RESULT_OK && parameter.optString("method", "").equals("h5pay")){
-                Intent intent = new Intent();
-                intent.setClass(mActivity.getApplicationContext(), H5Activity.class);
-                intent.putExtra("url", json.optString("url", ""));
-                startActivity(intent);
-            }
-
-            if(retCode == RESULT_OK && parameter.optString("method", "").equals("qrpay")){
-                Intent intent = new Intent();
-                intent.setClass(mActivity.getApplicationContext(), QrActivity.class);
-                intent.putExtra("qrcode", json.optString("qrcode", ""));
-                startActivity(intent);
-            }
-
-
-            Log.d(TAG, retMessage);
-            if(BuildConfig.DEBUG)
-                Toast.makeText(MainActivity.this, retMessage, Toast.LENGTH_LONG).show();
-            mStartIntent.putExtra("message", retMessage);
-            mActivity.setResult(retCode, mStartIntent);
-            mActivity.finish();
+        if(retCode == RESULT_OK && parameter.optString("method", "").equals("h5pay")){
+            Intent intent = new Intent();
+            intent.setClass(mActivity.getApplicationContext(), H5Activity.class);
+            intent.putExtra("url", json.optString("url", ""));
+            startActivity(intent);
         }
 
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
+        if(retCode == RESULT_OK && parameter.optString("method", "").equals("qrpay")){
+            Intent intent = new Intent();
+            intent.setClass(mActivity.getApplicationContext(), QrActivity.class);
+            //intent.setClass(mActivity.getApplicationContext(), JXBCashierActivity.class);
+            intent.putExtra("qrcode", json.optString("qrcode", ""));
+            startActivity(intent);
         }
 
-        @Override
-        protected String doInBackground(Void... params) {
-            String env = parameter.optString("env", "");
-            env = env == null ? "" : env;
-            String url = (env.equalsIgnoreCase("dev") ? getString(R.string.dev_env_url)
-                                : env.equalsIgnoreCase("demo") ? getString(R.string.demo_env_url)
-                                : getString(R.string.online_env_url))
-                                + parameter.optString("method");
+        Log.d(TAG, retMessage);
+        if(BuildConfig.DEBUG)
+            Toast.makeText(MainActivity.this, retMessage, Toast.LENGTH_LONG).show();
+        mStartIntent.putExtra("message", retMessage);
+        mActivity.setResult(retCode, mStartIntent);
+        mActivity.finish();
+    }
 
-            String entity = "";
+    @Override
+    public void beforePayRequest(JSONObject param) {
 
-            try {
-                parameter.putOpt("pay_type",
-                        typetag == 1 ? "微信" // getWeiXinParams
-                                : typetag == 2 ? "支付宝" // getAliPayParm
-                                : typetag == 3 ? "云闪付"
-                                : "微信"); // getCloudQuickPayParm
+    }
 
-                parameter.putOpt("no_redirect", true);
-                entity = parameter.toString();
-            } catch (JSONException e) {
-                Log.e(TAG, "exception in prepare parameter", e);
-                return null;
-            }
+    @Override
+    public void onPayRequestTick(long millisUntilFinished) {
 
-            Log.d(TAG, "typetag:" + typetag);
-            Log.d(TAG, "doInBackground, url = " + url);
-            Log.d(TAG, "doInBackground, entity = " + entity);
-
-            // TODO 根据传入参数：订单编号/订单金额，沙盒/根据用户选择支付方式
-            //  传递到服务器，从服务器获取相应参数，并通过服务器向银联商务请求支付订单
-            //  回传处理结果，再发起app支付
-            byte[] buf = httpPost(url, entity);
-            if (buf == null || buf.length == 0) {
-                return null;
-            }
-
-            String content = new String(buf);
-            Log.d(TAG, "doInBackground, content = " + content);
-            return content;
-        }
     }
 
     /**

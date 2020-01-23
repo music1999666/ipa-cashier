@@ -10,7 +10,7 @@
   
 # 调用参数
 
-  pay_type: 微信/支付宝/云闪付  
+  pay_type: 微信/支付宝/云闪付/c2b聚合支付
   method:   h5pay/qrpay/apppay  
   amount:   收款金额，以元为单位，两位小数 
   sandbox:  子商户二级域名，一般为注册手机号  
