@@ -417,6 +417,8 @@ public class JXBCashierActivity extends AppCompatActivity
                 findViewById(R.id.qr_layout).setVisibility(View.VISIBLE);
                 findViewById(R.id.cash_layout).setVisibility(View.INVISIBLE);
                 showDescriptionLayout(getString(R.string.qr_pay_description));
+
+                refresh();
             }
         });
         ((Button) findViewById(R.id.cash_cancel)).setOnClickListener(new View.OnClickListener() {
