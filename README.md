@@ -72,7 +72,8 @@
       "billnumber":"2345xxx",                   // 客户购买订单号
       "receipt_amount":1000.00,                 // 商户实收金额
       "order_amount":1000.00,                   // 商户订单金额
-      "settle_date":"2020-1-20"                 // 结算日期
+      "settle_date":"2020-1-20",                 // 结算日期
+      "sandbox":"189xxx"                            // 子商户二级域名，一般为注册手机号
     }
     
 # 查询结果
@@ -91,3 +92,10 @@
     {
       "error": "找不到订单"
     } 
+
+#调用/回调签名算法
+签名生成的通用步骤如下：
+第一步，设所有发送或者接收到的数据为集合M，将集合M内非空参数值的参数按照参数名ASCII码从小到大排序（字典序），使用URL键值对的格式（即key1=value1&key2=value2…）拼接成字符串。
+第二步，在stringA最后拼接上应用key得到stringSignTemp字符串，并对stringSignTemp进行MD5运算，再将得到的字符串所有字符转换为大写，得到sign值signValue。
+stringSignTemp="xxx=yyy&key=key"
+sign=MD5(stringSignTemp).toUpperCase()
