@@ -64,6 +64,8 @@ public class JXBCashierActivity extends AppCompatActivity
             mResultJson.putOpt("output", new JSONObject(getString(R.string.cancel_result)));
 
             parameter = new JSONObject(para_str);
+            parameter.remove("notifyurl");
+            parameter.remove("returnurl");
             parameter.putOpt("amount", parameter.optDouble("count"));
             parameter.remove("count");
             parameter.putOpt("billnumber", parameter.optString("billid", ""));
