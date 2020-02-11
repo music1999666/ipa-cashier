@@ -318,7 +318,7 @@ public class JXBCashierActivity extends AppCompatActivity
 
         JSONObject result = null;
         try {
-            Log.d(TAG, output == null ? "null" : output);
+            Log.d(TAG,  "get response : " + (output == null ? "null" : output));
             result = new JSONObject(output);
         } catch (Exception e) {
             e.printStackTrace();
