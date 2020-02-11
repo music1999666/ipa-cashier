@@ -28,19 +28,100 @@
         android:id="@+id/load_qr_hint"
         android:layout_width="0sp"
         android:layout_height="0sp"
+
+        android:layout_marginTop= "10sp"
         android:layout_marginBottom="10sp"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft= "16sp"
+        android:layout_marginRight="16sp"
+
         android:gravity="center"
-        android:paddingTop="@dimen/public_space_value_10"
+
         android:text="正在加载收款码......"
-        android:textColor="#FF6600"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@id/qr_ali"
+
+        app:layout_constraintBottom_toTopOf="@id/qr_cancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/qr_manual_checked"
+        android:text="已经支付"
+        android:visibility="invisible"
+        android:textColor="@color/white"
+        android:background="#FF6600"
+        android:textSize="16sp"
+
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginRight="16sp"
+        android:layout_marginBottom="10sp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/qr_action"
+        app:layout_constraintBottom_toTopOf="@id/qr_wx"
+
+        app:layout_constraintHorizontal_chainStyle="spread" />
+
+    <Button
+        android:id="@+id/qr_cancel"
+        android:text="取    消"
+        android:visibility="invisible"
+        android:textColor="@color/white"
+        android:background="#FF6600"
+        android:textSize="16sp"
+
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginRight="16sp"
+        android:layout_marginBottom="10sp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/qr_action"
+        app:layout_constraintBottom_toTopOf="@id/qr_wx"
+
+        app:layout_constraintHorizontal_chainStyle="spread" />
+
+    <Button
+        android:id="@+id/qr_action"
+        android:text="重    试"
+        android:visibility="invisible"
+        android:textColor="@color/white"
+        android:background="#FF6600"
+        android:textSize="16sp"
+
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="10sp"
+        android:layout_marginBottom="10sp"
+
+        app:layout_constraintBottom_toTopOf="@id/qr_wx"
+        app:layout_constraintStart_toEndOf="@id/qr_cancel"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/qr_done"
+        android:text="确认并提交"
+        android:visibility="invisible"
+        android:textColor="@color/white"
+        android:background="#FF6600"
+        android:textSize="16sp"
+
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:layout_marginBottom="10sp"
+
+        app:layout_constraintBottom_toTopOf="@id/qr_wx"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/tick_text"

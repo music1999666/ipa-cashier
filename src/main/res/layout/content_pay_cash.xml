@@ -29,10 +29,10 @@
         android:paddingTop="@dimen/public_space_value_10"
         android:paddingBottom="@dimen/public_space_value_10"
         android:text="@string/cash_confirm_hint"
-        android:maxLines="2"
+        android:maxLines="3"
         app:autoSizeTextType="uniform"
 
-        android:textColor="#FF6600"
+        android:textColor="@color/black"
         android:textSize="24sp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/guideline_cash"

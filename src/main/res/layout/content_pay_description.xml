@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.8016416" />
+        app:layout_constraintGuide_percent="0.7" />
 
     <TextView
         android:id="@+id/pay_description"
@@ -34,10 +34,10 @@
 
         android:text="@string/qr_pay_description"
 
-        android:maxLines="3"
+        android:maxLines="2"
         app:autoSizeTextType="uniform"
 
-        android:textColor="#FF6600"
+        android:textColor="@color/black"
         android:textSize="24sp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/guideline_desc"
@@ -47,7 +47,7 @@
 
     <Button
         android:id="@+id/no_more"
-        android:text="不用再提醒"
+        android:text="不再提醒"
 
         android:textColor="@color/white"
         android:background="#FF6600"
@@ -66,7 +66,7 @@
 
     <Button
         android:id="@+id/confirm_acknowledge"
-        android:text="知道了"
+        android:text="我知道了"
         android:textColor="@color/white"
         android:background="#FF6600"
         android:textSize="16sp"

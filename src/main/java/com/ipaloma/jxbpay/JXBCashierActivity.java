@@ -50,6 +50,9 @@ public class JXBCashierActivity extends AppCompatActivity
     private JSONObject mPayDescShown = new JSONObject();
     private int mCurrentMode = R.id.pay_qr;
     private String sessionId;
+    private Button qrAction;
+    private Button qrCancel;
+    private Button qrMannualChecked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +123,9 @@ public class JXBCashierActivity extends AppCompatActivity
         loadQr.setVisibility(View.VISIBLE);
         qrPay.setVisibility(View.INVISIBLE);
 
+        qrCancel = (Button)findViewById(R.id.qr_cancel);
+        qrMannualChecked = (Button)findViewById(R.id.qr_manual_checked);
+        qrAction = (Button)findViewById(R.id.qr_action);
         loadQr.setClickable(false);
 
         tickText = (TextView) findViewById(R.id.tick_text);
@@ -262,15 +268,9 @@ public class JXBCashierActivity extends AppCompatActivity
             loadQr.setVisibility(View.VISIBLE);
             qrPay.setVisibility(View.INVISIBLE);
             loadQr.setText(String.format(getString(R.string.get_qr_fail), retMessage));
-            loadQr.setClickable(true);
 
-            loadQr.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new GetPayRequestTask(parameter, mActivity, JXBCashierActivity.this).execute();
-                    loadQr.setClickable(false);
-                }
-            });
+            qrCancel.setVisibility(View.VISIBLE);
+            qrAction.setVisibility(View.VISIBLE);
             return;
         }
         loadQr.setVisibility(View.INVISIBLE);
@@ -353,27 +353,22 @@ public class JXBCashierActivity extends AppCompatActivity
         String workflowHint = parameter.optString("scene", "").equals("结算")
                 ? getString(R.string.settle_payment_status_unknown)
                 : getString(R.string.cash_in_payment_status_unknown);
+
         String message =
                 // 网络问题
-                result == null ? String.format(getString(R.string.payment_status_network_error), workflowHint)
-                        // 查询返回错误信息
-                        : !result.optString("error", "").equals("")
-                        ? String.format(getString(R.string.payment_status_error), result.optString("error", ""), workflowHint)
-                        // 单据关闭/失败
-                        : String.format(getString(R.string.payment_status_pending), workflowHint);
+                result == null
+                ? String.format(getString(R.string.payment_status_network_error), workflowHint)
+                // 查询返回错误信息
+                : !result.optString("error", "").equals("")
+                ? String.format(getString(R.string.payment_status_error), result.optString("error", ""), workflowHint)
+                // 单据关闭/失败/等待支付超时
+                : String.format(getString(R.string.payment_status_pending), workflowHint);
+
+        qrAction.setVisibility(View.VISIBLE);
+        qrMannualChecked.setVisibility(View.VISIBLE);
 
         loadQr.setText(message);
 
-        loadQr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 重新获取二维码，继续扫码
-                // 网络问题/继续等待，重新发起支付，避免状态不一致
-                new GetPayRequestTask(parameter, mActivity, JXBCashierActivity.this)
-                        .execute();
-            }
-        });
-        loadQr.setClickable(true);
         return;
     }
 
@@ -415,18 +410,13 @@ public class JXBCashierActivity extends AppCompatActivity
         payByCash.setClickable(false);
         payByCash.setTypeface(payByCash.getTypeface(), Typeface.ITALIC);
 
-        loadQr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mActivity.finish();
-            }
-        });
-        loadQr.setClickable(true);
+        findViewById(R.id.qr_done).setVisibility(View.VISIBLE);
+
     }
 
     private void setClickListener() {
         // back button
-        ((TextView) findViewById(R.id.back)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mActivity.finish();
@@ -463,6 +453,45 @@ public class JXBCashierActivity extends AppCompatActivity
                 refresh();
             }
         });
+
+        qrCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.finish();
+            }
+        });
+
+        findViewById(R.id.qr_done).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.finish();
+            }
+        });
+
+        // 人工确认，没有相应的系统记录，需后台对账
+        qrMannualChecked.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mResultJson.putOpt("output", new JSONObject(getString(R.string.cash_confirm_result)));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mActivity.finish();
+            }
+        });
+
+        qrAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new GetPayRequestTask(parameter, mActivity, JXBCashierActivity.this).execute();
+                qrAction.setVisibility(View.INVISIBLE);
+                qrCancel.setVisibility(View.INVISIBLE);
+                qrMannualChecked.setVisibility(View.INVISIBLE);
+                //loadQr.setClickable(false);
+            }
+        });
+
         ((Button) findViewById(R.id.cash_cancel)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -473,7 +502,7 @@ public class JXBCashierActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 try {
-                    mResultJson.putOpt("output", new JSONObject(getString(R.string.qr_confirm_result)));
+                    mResultJson.putOpt("output", new JSONObject(getString(R.string.cash_confirm_result)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
