@@ -473,7 +473,7 @@ public class JXBCashierActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 try {
-                    mResultJson.putOpt("output", new JSONObject(getString(R.string.cash_confirm_result)));
+                    mResultJson.putOpt("output", new JSONObject(getString(R.string.qr_confirm_result)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

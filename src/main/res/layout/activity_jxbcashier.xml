@@ -20,18 +20,21 @@
 
     <ImageView
         android:id="@+id/back"
-        app:srcCompat="@drawable/icon_back_orange"
-        android:gravity="center"
-
         android:layout_width="18sp"
         android:layout_height="0sp"
-        android:layout_gravity="center"
 
-        android:layout_marginLeft="12sp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="4sp"
+        android:layout_marginTop="8sp"
+        android:layout_marginBottom="8sp"
+
+        android:gravity="center"
 
         app:layout_constraintBottom_toBottomOf="@+id/toolbar_title"
+
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar_title"/>
+        app:layout_constraintTop_toTopOf="@+id/toolbar_title"
+        app:srcCompat="@drawable/icon_orange_back" />
 
     <TextView
         android:id="@+id/toolbar_title"
@@ -39,7 +42,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
 
-        android:layout_marginRight="30sp"
+        android:layout_marginLeft="4sp"
+        android:layout_marginRight="26sp"
+
         android:layout_marginTop="10sp"
         android:layout_marginBottom="5sp"
 
