@@ -17,12 +17,13 @@ import android.widget.TextView;
 
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class JXBCashierActivity extends AppCompatActivity
         implements GetPayRequestTask.GetPayRequestResponse,
-                            PaymentStatusTask.PaymentStatusResponse {
+        PaymentStatusTask.PaymentStatusResponse {
 
     private static final String TAG = "JXBCashierActivity";
     private Intent mStartIntent;
@@ -48,6 +49,7 @@ public class JXBCashierActivity extends AppCompatActivity
 
     private JSONObject mPayDescShown = new JSONObject();
     private int mCurrentMode = R.id.pay_qr;
+    private String sessionId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,13 @@ public class JXBCashierActivity extends AppCompatActivity
             Log.d(TAG, "start parameter" + mStartIntent.getExtras().toString());
 
         try {
+            sessionId = mStartIntent.getStringExtra("sessionid");
             String para_str = mStartIntent.getStringExtra("parameter");
+            if(sessionId != null  && !sessionId.equals("")&& !"".equals(JXBCashierParameter.input.optString(sessionId, "")))
+            {
+                para_str = JXBCashierParameter.input.optString(sessionId, "");
+                JXBCashierParameter.input.remove(sessionId);
+            }
 
             mResultJson.putOpt("input", new JSONObject(para_str));
             mResultJson.putOpt("output", new JSONObject(getString(R.string.cancel_result)));
@@ -70,6 +78,8 @@ public class JXBCashierActivity extends AppCompatActivity
             parameter.remove("count");
             parameter.putOpt("billnumber", parameter.optString("billid", ""));
             parameter.putOpt("method", "qrpay");
+            parameter.putOpt("return_guid", true);
+            parameter.putOpt("return_array", true);
             parameter.putOpt("pay_type", "c2b聚合支付");
             parameter.putOpt("no_redirect", true);
         } catch (JSONException e) {
@@ -87,8 +97,8 @@ public class JXBCashierActivity extends AppCompatActivity
 
         // 显示客户名称
         customer = (TextView) findViewById(R.id.customer_name);
-        if (!parameter.optString("customer_name", "").equals(""))
-            customer.setText(parameter.optString("customer_name"));
+        if (!parameter.optString("customername", "").equals(""))
+            customer.setText(parameter.optString("customername"));
 
         // 显示金额
         cashTotal = (TextView) findViewById(R.id.cash_total);
@@ -145,7 +155,7 @@ public class JXBCashierActivity extends AppCompatActivity
         }
         // 获取二维码任务没有运行并且当前没有展示二维码，或者二维码10秒以内到期
         if ((mPayRequestTask == null || mPayRequestTask.getStatus() == AsyncTask.Status.FINISHED)
-            && (qrPay.getVisibility() == View.INVISIBLE || (System.currentTimeMillis() - qrTime) > mQrDuration - 10 * 1000)) {
+                && (qrPay.getVisibility() == View.INVISIBLE || (System.currentTimeMillis() - qrTime) > mQrDuration - 10 * 1000)) {
             Log.d(TAG, "resumed, to start new pay request");
             CancelTasks();
             mPayRequestTask = new GetPayRequestTask(parameter, mActivity, JXBCashierActivity.this)
@@ -182,6 +192,14 @@ public class JXBCashierActivity extends AppCompatActivity
             // 成功状态
             //      完成支付
             Log.d(TAG, "\ndestroy activity, return with result\n" + mResultJson.toString(4));
+            if(sessionId != null && !sessionId.equals(""))
+            {
+                JXBCashierParameter.output.put(sessionId, mResultJson.toString());
+            }
+            Log.d(TAG, "onActivityResult start close app");
+            mStartIntent.putExtra("sessionid", sessionId);
+            setResult(RESULT_OK, mStartIntent);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -233,8 +251,10 @@ public class JXBCashierActivity extends AppCompatActivity
             }
         }
         // 已经支付成功
-        if (json != null && json.optString("sessionstatus", "").equals("成功")) {
-            onPaymentSuccess(json);
+        if (json != null && json.optJSONArray("content") != null
+                && json.optJSONArray("content").optJSONObject(0) != null
+                && json.optJSONArray("content").optJSONObject(0).optString("sessionstatus", "").equals("成功")) {
+            onPaymentSuccess(json, true);
             return;
         }
 
@@ -311,7 +331,7 @@ public class JXBCashierActivity extends AppCompatActivity
             return;
         }
 
-        onPaymentSuccess(result);
+        onPaymentSuccess(result, false);
 
     }
 
@@ -357,23 +377,43 @@ public class JXBCashierActivity extends AppCompatActivity
         return;
     }
 
-    private void onPaymentSuccess(JSONObject result) {
+    private void onPaymentSuccess(JSONObject result, Boolean duplicate) {
         qrTime = -1;
         loadQr.setVisibility(View.VISIBLE);
         qrPay.setVisibility(View.INVISIBLE);
-        // 支付成功，强制切回扫码支付
-        // 不允许切换到现金支付
-        loadQr.setText(String.format(getString(R.string.pay_done), result.optDouble("order_amount")));
-        payByQr.callOnClick();
-        payByCash.setClickable(false);
-        payByCash.setTypeface(payByCash.getTypeface(), Typeface.ITALIC);
+        double order_amount = 0;
 
         // 保存成功状态
         try {
-            mResultJson.putOpt("output", new JSONObject(getString(R.string.qr_confirm_result)));
+            JSONObject output = new JSONObject(getString(R.string.qr_confirm_result));
+            JSONArray content = result.optJSONArray("content");
+            JSONArray scanPay = output.optJSONArray("scan_pay");
+
+            int i;
+            for(i = 0; i < content.length(); i++ ) {
+                scanPay.put(i,
+                        new JSONObject()
+                                .put("guid", content.optJSONObject(i).optString("guid"))
+                                .put("count", content.optJSONObject(i).optDouble("order_amount", 0)));
+                order_amount += content.optJSONObject(i).optDouble("order_amount", 0);
+            }
+            output.putOpt("scan_pay", scanPay);
+            mResultJson.putOpt("output", output);
+            Log.d(TAG, "success result : \n" + mResultJson.toString(4));
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        // 支付成功，强制切回扫码支付
+        // 不允许切换到现金支付
+        loadQr.setText(
+                duplicate
+                        ? String.format(getString(R.string.pay_duplicate), order_amount)
+                        : String.format(getString(R.string.pay_done), order_amount));
+
+        payByQr.callOnClick();
+        payByCash.setClickable(false);
+        payByCash.setTypeface(payByCash.getTypeface(), Typeface.ITALIC);
 
         loadQr.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -433,7 +473,7 @@ public class JXBCashierActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 try {
-                    mResultJson.putOpt("output", getString(R.string.cash_confirm_result));
+                    mResultJson.putOpt("output", new JSONObject(getString(R.string.qr_confirm_result)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -469,7 +509,7 @@ public class JXBCashierActivity extends AppCompatActivity
 
         // Already shown in current operation or user choose no more
         if(mPayDescShown.optBoolean(key, false )
-            || getApplicationContext().getSharedPreferences("pay_description_no_more", 0)
+                || getApplicationContext().getSharedPreferences("pay_description_no_more", 0)
                 .getBoolean(key, false)) {
             // Close it incase already there
             findViewById(R.id.pay_desc_layout).setVisibility(View.INVISIBLE);
@@ -484,3 +524,4 @@ public class JXBCashierActivity extends AppCompatActivity
         }
     }
 }
+
