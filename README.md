@@ -17,6 +17,7 @@
   billnumber: 订单号，要求在一个子商户中唯一   
   notifyurl:  调用方提供的回调地址用于接收支付状态通知，POST方式，json参数 application/json; charset=utf-8  
   returnurl:  支付后跳转页面，支付方式为h5pay时使用 
+  sign:       签名信息
   
 # 返回结果
 
@@ -25,7 +26,8 @@
     {
       "url": "https://xxx?...",
       "method": "get",
-      "result_url": "http://xxx?..."
+      "result_url": "http://xxx?...",
+      "sign":"XXXXX..."
     }    
     调用者在微信中跳转到url指定页面，可通过result_url自主查询支付结果，或者通过传递的notifyurl接收通知消息
 
@@ -34,7 +36,8 @@
     {
       "url": "https://xxx?...",
       "method": "get",
-      "result_url": "http://xxx?..."
+      "result_url": "http://xxx?...",
+      "sign":"XXXXX..."
     }
     调用者在浏览器中跳转到url指定页面，可通过result_url自主查询支付结果，或者通过传递的notifyurl接收通知消息
 
@@ -42,7 +45,8 @@
   
     {
       "qrcode": "https://xxx?id=31942001154593417000039638",
-      "result_url": "http://xxx?..."
+      "result_url": "http://xxx?...",
+      "sign":"XXXXX..."
     }
     调用者在将qrcode内容编码，并显示在界面中，可通过result_url自主查询支付结果，或者通过传递的notifyurl接收通知消息
 
@@ -50,7 +54,8 @@
   
     {
     "app_pay_request": {"xxx":"xxxx"},
-    "result_url": "http://xxx?..."
+    "result_url": "http://xxx?...",
+      "sign":"XXXXX..."
     }
     调用者在将app_pay_reqeust内容作为参数，调用相应的APP支付sdk，可通过result_url自主查询支付结果，或者通过传递的notifyurl接收通知消息
     
@@ -74,6 +79,7 @@
       "order_amount":1000.00,                   // 商户订单金额
       "settle_date":"2020-1-20",                // 结算日期
       "sandbox":"189xxx"                        // 子商户二级域名，一般为注册手机号
+      "sign":"XXXXX......"                      // 通知签名
     }
     
 # 查询结果
@@ -87,6 +93,7 @@
       "sessionendtime":"2020-1-20 09:01:29",    // 支付时间
       "order_amount":1000.00,                   // 商户订单金额
       "receipt_amount":1000.00                  // 商户实收金额
+      "sign":"XXXXX......"                       // 签名
     }
     错误
     {
