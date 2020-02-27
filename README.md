@@ -84,7 +84,8 @@
     
 # 查询结果
     支付请求返回以下查询url，也可以自行拼装，提供sandbox/billnumber为参数
-    http://xxxx/webapi/asset/outertransfer/status?billnumber=202001070058150000006&sandbox=123456789
+    http://xxxx/webapi/asset/outertransfer/status?billnumber=202001070058150000006&sandbox=123456789&sign=XXXXXXX
+
     正常返回
     {
       "sessionstatus":"成功|失败|关闭|等待|退款", // 交易状态
